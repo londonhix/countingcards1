@@ -65,7 +65,7 @@ def reset():
 @app.route('/train', methods=['GET', 'POST'])
 def train():
     if request.method == 'POST':
-        interval = int(request.form.get('interval', 2))
+        interval = float(request.form.get('interval', 2))
         session['train_cards'] = []
         session['train_count'] = 0
         session['interval'] = interval
@@ -100,6 +100,9 @@ def training_end():
 def training_guess():
     return render_template('training_guess.html')
 
+@app.route('/learn')
+def learn():
+    return render_template('learn.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -30,6 +30,10 @@
     {% endif %}
     
     {% if system != 'none' %}
+        <form method="get" action="{{ url_for('learn') }}">
+            <button type="submit">Go to Learning Mode</button>
+        </form>
+
         <form method="get" action="{{ url_for('round') }}">
             <button type="submit">Go to Practice Mode</button>
         </form>

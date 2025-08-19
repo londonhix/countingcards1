@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  </head>
+
+
+  <h1>Learn </h1>
+
+  <table>
+    <tr>
+      <th>Cards</th>
+      <th>A</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>J</th>
+      <th>Q</th>
+      <th>K</th>
+    </tr>
+    <tr>
+      <td>Card Value</td>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+  </table>
+
+  <br>
+
+  <form method="get" action="{{ url_for('reset') }}">
+          <button type="submit">Home</button>
+      </form>
+
+</html>

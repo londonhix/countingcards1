@@ -13,15 +13,20 @@ systems = {
     'KO': ko
 }
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    try:
+        selected_system
+    except NameError:
+        selected_system = 'none'
     if request.method == 'POST':
-        selected_system = request.form['system']
+        selected_system = request.form.get('system', 'none')
         session['system'] = selected_system
         session['count'] = 0
         session['history'] = []
-        return redirect(url_for('round'))
-    return render_template('index.html', systems=systems.keys())
+        #return redirect(url_for('round'))
+    return render_template('index.html', systems=systems.keys(), system = selected_system)
 
 @app.route('/round', methods=['GET', 'POST'])
 def round():
@@ -31,7 +36,7 @@ def round():
     session['card'] = card_key
 
     # Get the count value using selected system
-    system_module = systems.get(session['system'], hi_lo)  # Default to Hi-Lo if none
+    system_module = systems.get(session['system'])  # Default to Hi-Lo if none
     count_value = system_module.card_value(rank)
     session['count'] += count_value
 
@@ -41,7 +46,7 @@ def round():
         'value': count_value,
         'total': session['count']
     })
-
+    print(session['system'])
     advice = system_module.betting_advice(session['count'])
 
     return render_template(
@@ -62,8 +67,9 @@ def train():
     if request.method == 'POST':
         interval = int(request.form.get('interval', 2))
         session['train_cards'] = []
-        session['train_count'] = 1
+        session['train_count'] = 0
         session['interval'] = interval
+        system=session['system']
         return redirect(url_for('training_session'))
     return render_template('train.html')
 
@@ -73,12 +79,11 @@ def training_session():
     rank = random.choice(ranks)
     card_key = f"{suit}_{rank}"
     print(session['system'])
-    system_module = systems.get(session['system'], hi_lo)
+    system_module = systems.get(session['system'])
     count_value = system_module.card_value(rank)
     session['train_count'] += count_value
-    print(session['train_count'])
 
-    return render_template('training_session.html', card=card_key, interval=session['interval'])
+    return render_template('training_session.html', card=card_key, interval=session['interval'], system=session['system'],)
 
 @app.route('/training_end', methods=['POST'])
 def training_end():

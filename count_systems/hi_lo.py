@@ -8,8 +8,8 @@ def card_value(card):
 
 def betting_advice(count):
     if count >= 2:
-        return '🟢 Bet Big'
+        return 'Bet Big'
     elif count <= 0:
-        return '🔴 Bet Small'
+        return 'Bet Small'
     else:
-        return '🟡 Bet Neutral'
+        return 'Bet Neutral'

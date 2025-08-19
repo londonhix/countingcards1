@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Counting System</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding-top: 100px;
+        }
+        select, input[type="submit"], button {
+            font-size: 18px;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Card Counting Trainer</h1>
+
+    <form method="post">
+        <label for="system">Choose your counting system:</label><br><br>
+        <select name="system" id="system">
+            {% for name in systems %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select><br>
+        <input type="submit" value="Start Drawing Cards">
+    </form>
+
+    <hr>
+
+    <form method="get" action="{{ url_for('train') }}">
+        <button type="submit">Go to Training Mode 🔁</button>
+    </form>
+</body>
+</html>

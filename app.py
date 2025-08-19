@@ -1,0 +1,100 @@
+from flask import Flask, render_template, request, redirect, url_for, session
+from count_systems import hi_lo, ko
+import random
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace']
+suits = ['hearts', 'spades', 'clubs', 'diamonds']
+
+systems = {
+    'Hi-Lo': hi_lo,
+    'KO': ko
+}
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        selected_system = request.form['system']
+        session['system'] = selected_system
+        session['count'] = 0
+        session['history'] = []
+        return redirect(url_for('round'))
+    return render_template('index.html', systems=systems.keys())
+
+@app.route('/round', methods=['GET', 'POST'])
+def round():
+    suit = random.choice(suits)
+    rank = random.choice(ranks)
+    card_key = f"{suit}_{rank}"
+    session['card'] = card_key
+
+    # Get the count value using selected system
+    system_module = systems.get(session['system'], hi_lo)  # Default to Hi-Lo if none
+    count_value = system_module.card_value(rank)
+    session['count'] += count_value
+
+    # Save history
+    session['history'].append({
+        'card': card_key,
+        'value': count_value,
+        'total': session['count']
+    })
+
+    advice = system_module.betting_advice(session['count'])
+
+    return render_template(
+        'round.html',
+        card=card_key,
+        system=session['system'],
+        count=session['count'],
+        advice=advice
+    )
+
+@app.route('/reset')
+def reset():
+    session.clear()
+    return redirect(url_for('index'))
+
+@app.route('/train', methods=['GET', 'POST'])
+def train():
+    if request.method == 'POST':
+        interval = int(request.form.get('interval', 2))
+        session['train_cards'] = []
+        session['train_count'] = 1
+        session['interval'] = interval
+        return redirect(url_for('training_session'))
+    return render_template('train.html')
+
+@app.route('/training_session')
+def training_session():
+    suit = random.choice(suits)
+    rank = random.choice(ranks)
+    card_key = f"{suit}_{rank}"
+    print(session['system'])
+    system_module = systems.get(session['system'], hi_lo)
+    count_value = system_module.card_value(rank)
+    session['train_count'] += count_value
+    print(session['train_count'])
+
+    return render_template('training_session.html', card=card_key, interval=session['interval'])
+
+@app.route('/training_end', methods=['POST'])
+def training_end():
+    guess = int(request.form['guess'])
+    actual = session.get('train_count', 0)
+    result = {
+        'guess': guess,
+        'actual': actual,
+        'correct': guess == actual
+    }
+    return render_template('training_result.html', result=result)
+
+@app.route('/training_guess')
+def training_guess():
+    return render_template('training_guess.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

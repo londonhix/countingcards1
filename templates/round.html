@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Card Draw</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        img {
+            margin: 20px;
+        }
+        .info {
+            font-size: 18px;
+        }
+        form {
+            margin-top: 30px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>You drew: {{ card.replace('_', ' ').title() }}</h1>
+    <img src="{{ url_for('static', filename='cards/' + card + '.png') }}" alt="{{ card }}" width="150">
+
+    <div class="info">
+        <p>Counting System: <strong>{{ system }}</strong></p>
+        <p>Card Value: <strong>{{ session.history[-1].value }}</strong></p>
+        <p>Running Count: <strong>{{ count }}</strong></p>
+        <p>Advice: <em>{{ advice }}</em></p>
+    </div>
+
+    <form method="post" action="{{ url_for('round') }}">
+        <button type="submit">Draw Another Card</button>
+    </form>
+
+    <form method="get" action="{{ url_for('reset') }}">
+        <button type="submit">Reset</button>
+    </form>
+
+    <form method="get" action="{{ url_for('train') }}">
+        <button type="submit">Switch to Training Mode</button>
+    </form>
+</body>
+</html>

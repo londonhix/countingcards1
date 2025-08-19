@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Round Result</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 60px; }
+        .correct { color: green; }
+        .incorrect { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Results 🎯</h1>
+    <p>Your Guess: <strong>{{ result.guess }}</strong></p>
+    <p>Actual Count: <strong>{{ result.actual }}</strong></p>
+    <p class="{{ 'correct' if result.correct else 'incorrect' }}">
+        {{ '✅ Correct!' if result.correct else '❌ Incorrect!' }}
+    </p>
+    <form method="get" action="{{ url_for('index') }}">
+        <button type="submit">Try Again</button>
+    </form>
+</body>
+</html>

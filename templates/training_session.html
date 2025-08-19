@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Training Session</title>
+    <script>
+        setTimeout(() => {
+            window.location.href = "{{ url_for('training_session') }}";
+        }, {{ interval * 1000 }});
+    </script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 60px; }
+        button { padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Training Mode</h1>
+    <img src="{{ url_for('static', filename='cards/' + card + '.png') }}" alt="{{ card }}" width="150">
+    <form method="get" action="{{ url_for('training_guess') }}">
+        <button type="submit">End Round</button>
+    </form>
+</body>
+</html>
